@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran CKG Anak Sekolah</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5em;
+        }
+        .form-group {
+            margin-bottom: 1em;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 0.8em;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 1em;
+        }
+        .success-message {
+            display: none;
+            text-align: center;
+            margin-top: 1em;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Formulir Pendaftaran CKG Siswa</h2>
+        <form name="submit-to-google-sheet">
+            <div class="form-group">
+                <label for="nik">NIK SISWA</label>
+                <input type="text" id="nik" name="NIK SISWA" placeholder="" required>
+            </div>
+            <div class="form-group">
+                <label for="nama">NAMA SISWA</label>
+                <input type="text" id="nama" name="NAMA SISWA" placeholder="" required>
+            </div>
+            <div class="form-group">
+                <label for="tanggal-lahir">TANGGAL LAHIR</label>
+                <input type="date" id="tanggal-lahir" name="TANGGAL LAHIR" required>
+            </div>
+            <div class="form-group">
+                <label for="no-hp">NOMOR HP SISWA / WALI MURID</label>
+                <input type="tel" id="no-hp" name="NOMER HP" placeholder="" required>
+            </div>
+            <div class="form-group">
+                <label for="kelas">KELAS</label>
+                <input type="text" id="kelas" name="KELAS" placeholder="" required>
+            </div>
+            <div class="form-group">
+                <label for="asal-sekolah">ASAL SEKOLAH</label>
+                <input type="text" id="asal-sekolah" name="ASAL SEKOLAH" placeholder="" required>
+            </div>
+            <button type="submit">DAFTAR</button>
+        </form>
+        <div class="loading">Mengirim data...</div>
+        <div class="success-message">Data berhasil terkirim! ✅</div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyV_ydg3hhl2nBvPzW9eGL2BYOY9CFOzWilD9oDFyReEW3lnAMgRo4Ioi-yiLG0zvkj/exec'; // <-- GANTI DENGAN URL APPS SCRIPT ANDA
+        const form = document.forms['submit-to-google-sheet'];
+        const loading = document.querySelector('.loading');
+        const successMessage = document.querySelector('.success-message');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            loading.style.display = 'block';
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    loading.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    console.log('Success!', response);
+                    // Sembunyikan pesan sukses setelah beberapa detik
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    console.error('Error!', error.message);
+                    alert('Terjadi kesalahan, data gagal dikirim.');
+                });
+        });
+    </script>
+
+</body>
+</html>
